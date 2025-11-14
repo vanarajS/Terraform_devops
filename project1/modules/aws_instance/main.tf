@@ -18,7 +18,7 @@ resource "aws_instance" "web1" {
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
   description = "Allow SSH inbound traffic"
-  vpc_id      = element(var.subnet_id, 0) != null ? aws_subnet.sb[0].vpc_id : null
+  vpc_id      = var.vpc_main_id
 
   ingress {
     from_port   = 22
