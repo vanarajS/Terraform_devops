@@ -19,4 +19,5 @@ module "instance" {
     instance_type      = "t2.micro"
     subnet_id          = module.vpc.subnet_ids
     vpc_main_id        = module.vpc.vpc_main_id
+    app-testing        = "app-testing.sh"
 }

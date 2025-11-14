@@ -9,6 +9,7 @@ resource "aws_instance" "web1" {
   key_name = aws_key_pair.deployer.key_name
   subnet_id = var.subnet_id[count.index]
   ami = var.os_name
+  user_data = file(var.app-testing)
   associate_public_ip_address = true 
   vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.lb-sg.id]
 

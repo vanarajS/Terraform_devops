@@ -29,3 +29,9 @@ variable "vpc_main_id" {
     type        = string
   
 }
+
+variable "app-testing" {
+    description = "Application testing variable"
+    type        = string
+  
+}
