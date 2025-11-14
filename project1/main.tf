@@ -10,3 +10,13 @@ module "vpc" {
   subnet_count = 2
   subnet_cidr = ["12.0.1.0/24", "12.0.2.0/24"]
 }
+
+module "instance" {
+    source = "./modules/aws_instance"
+    public_key_path    = "~/.ssh/id_rsa.pub"
+    os_name            = "ami-069e612f612be3a2b"
+    aws_instance_count = 2
+    instance_type      = "t2.micro"
+    subnet_id          = module.vpc.subnet_ids
+    count = 2
+}
