@@ -39,7 +39,7 @@ resource "aws_security_group" "allow_ssh" {
 resource "aws_lb_target_group" "tg" {
   name     = "tf-test-tg-tcp"
   port     = 80
-  protocol = "TCP"
+  protocol = "HTTP"
   vpc_id   = var.vpc_main_id
 
   target_group_health {
@@ -72,7 +72,7 @@ resource "aws_security_group" "lb-sg" {
   ingress {
     from_port   = 80
     to_port     = 80
-    protocol    = "tcp"
+    protocol    = "TCP"
     cidr_blocks = ["0.0.0.0/0"]
   }  
   egress {
