@@ -1,4 +1,4 @@
-resource "aws_vpc" "vpc" {
+resource "aws_vpc" "vpc1" {
     cidr_block = var.cidr_block 
     tags = {
         Name = var.vpc_name
@@ -8,7 +8,7 @@ resource "aws_vpc" "vpc" {
 
 resource "aws_subnet" "sb" {
     count = length(var.subnet_cidr)
-    vpc_id            = aws_vpc.vpc.id
+    vpc_id            = aws_vpc.vpc1.id
     cidr_block       = var.subnet_cidr[count.index]
     availability_zone = var.sub_region[count.index]
     tags = {
@@ -18,7 +18,7 @@ resource "aws_subnet" "sb" {
 }
 
 resource "aws_internet_gateway" "igw" {
-    vpc_id = aws_vpc.vpc.id
+    vpc_id = aws_vpc.vpc1.id
     tags = {
         Name = "${var.vpc_name}-igw"
     }
@@ -26,7 +26,7 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_route_table" "rt" {
-    vpc_id = aws_vpc.vpc.id
+    vpc_id = aws_vpc.vpc1.id
     route  {
         cidr_block = "0.0.0.0/0"
         gateway_id = aws_internet_gateway.igw.id 
