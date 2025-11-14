@@ -18,5 +18,4 @@ module "instance" {
     aws_instance_count = 2
     instance_type      = "t2.micro"
     subnet_id          = module.vpc.subnet_ids
-    count = 2
 }
