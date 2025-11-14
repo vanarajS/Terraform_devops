@@ -17,6 +17,6 @@ module "instance" {
     os_name            = "ami-069e612f612be3a2b"
     aws_instance_count = 2
     instance_type      = "t2.micro"
-    subnet_id          = module.vpc.subnet_ids
+    subnet_id          = [ for subnet in module.vpc.aws_subnet_ids : subnet ]
     count = 2
 }
