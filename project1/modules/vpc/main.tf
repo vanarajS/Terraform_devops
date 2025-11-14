@@ -42,3 +42,7 @@ resource "aws_route_table_association" "route_assoc" {
   subnet_id      = aws_subnet.sb[count.index].id
   route_table_id = aws_route_table.rt.id
 }
+
+output "subnet_ids" {
+  value = aws_subnet.sb[*].id
+}
