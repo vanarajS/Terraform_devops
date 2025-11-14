@@ -36,3 +36,32 @@ resource "aws_security_group" "allow_ssh" {
   }
 }   
 
+resource "aws_lb_target_group" "tcp-example" {
+  name     = "tf-test-tg-tcp"
+  port     = 80
+  protocol = "TCP"
+  vpc_id   = module.vpc.vpc_main_id
+
+  target_group_health {
+    dns_failover {
+      minimum_healthy_targets_count      = "1"
+      minimum_healthy_targets_percentage = "off"
+    }
+
+    unhealthy_state_routing {
+      minimum_healthy_targets_count      = "1"
+      minimum_healthy_targets_percentage = "off"
+    }
+  }
+}
+
+resource "aws_lb_target_group_attachment" "test" {
+  for_each = {
+    for k, v in aaws_instance.web1 : k => v
+  }
+  target_group_arn = aws_lb_target_group.tcp-example.arn
+  target_id        = each.value.id
+  port             = 80
+}
+
+
