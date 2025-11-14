@@ -10,7 +10,7 @@ resource "aws_instance" "web1" {
   subnet_id = var.subnet_id[count.index]
   ami = var.os_name
   associate_public_ip_address = true 
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.lb-sg.id]
 
   tags = {
     Name = "web-${count.index}"
