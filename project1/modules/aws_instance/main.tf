@@ -57,7 +57,7 @@ resource "aws_lb_target_group" "tg" {
 
 resource "aws_lb_target_group_attachment" "test" {
   for_each = {
-    for k, v in aaws_instance.web1 : k => v
+    for k, v in aws_instance.web1 : k => v
   }
   target_group_arn = aws_lb_target_group.tg.arn
   target_id        = each.value.id
