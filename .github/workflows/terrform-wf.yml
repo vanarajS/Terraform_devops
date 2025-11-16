@@ -44,9 +44,13 @@ jobs:
       
       - name: Terraform init
         run: terraform init
+        working-directory: ./project1
       
       - name: Terraform plan
         run: terraform plan
+        working-directory: ./project1
 
       - name: Terraform apply
         run: terraform apply
+        working-directory: ./project1
+    
