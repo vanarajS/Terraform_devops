@@ -35,6 +35,18 @@ jobs:
           echo test, and deploy your project.
       - name: Terraform setup
         uses: hashicorp/setup-terraform@v2.0.3
+      
+      - name: aws configure
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set default.region us-east-1
+      
+      - name: Terraform init
+        run: terraform init
+      
+      - name: Terraform plan
+        run: terraform plan
 
       - name: Terraform apply
         run: terraform apply
