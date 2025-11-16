@@ -1,37 +1,35 @@
 #!/bin/bash
-# Update system
-yum update -y
+# Install updates
+yum update -y || apt update -y
 
-# Install Apache
-yum install -y nginx
+# Install NGINX (Amazon Linux / RHEL / Ubuntu compatibility)
+if command -v yum >/dev/null 2>&1; then
+    yum install -y nginx
+    systemctl enable nginx
+    systemctl start nginx
+elif command -v apt >/dev/null 2>&1; then
+    apt update -y
+    apt install -y nginx
+    systemctl enable nginx
+    systemctl start nginx
+fi
 
-# Enable and start Apache
-systemctl enable nginx
-systemctl start nginx
-
-# Fetch instance metadata
-HOSTNAME=$(curl -s http://169.254.169.254/latest/meta-data/local-hostname)
-PRIVATE_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
-AZ=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
-
-# Create test page
-cat <<EOF > /var/www/html/index.html
+# Create a simple test page
+cat <<EOF > /usr/share/nginx/html/index.html
 <html>
-  <head>
-    <title>ALB Test Server</title>
-  </head>
-  <body style="font-family: Arial; text-align: center; margin-top: 50px;">
-    <h1 style="color: #3366ff;">ALB Test Server</h1>
-    <h2>Host: $HOSTNAME</h2>
-    <h3>Private IP: $PRIVATE_IP</h3>
-    <h3>Availability Zone: $AZ</h3>
-    <p>This instance is behind an AWS ALB.</p>
-  </body>
+<head>
+<title>ALB Test</title>
+</head>
+<body>
+<h1>NGINX is running behind your ALB!</h1>
+<p>Instance hostname: $(hostname)</p>
+<p>Served at: $(date)</p>
+</body>
 </html>
 EOF
 
-# Allow Apache through firewall if needed
-if command -v firewall-cmd &> /dev/null; then
-    firewall-cmd --permanent --add-service=http
+# Open HTTP port if needed (Amazon Linux 2023 uses firewalld disabled by default)
+if command -v firewall-cmd >/dev/null 2>&1; then
+    firewall-cmd --add-service=http --permanent
     firewall-cmd --reload
 fi
