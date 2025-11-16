@@ -13,11 +13,11 @@ module "vpc" {
 
 module "instance" {
     source = "./modules/aws_instance"
-    public_key_path    = file(ssh-key)
+    public_key_path    = file("./ssh-key")
     os_name            = "ami-069e612f612be3a2b"
     aws_instance_count = 2
     instance_type      = "t2.micro"
     subnet_id          = module.vpc.subnet_ids
     vpc_main_id        = module.vpc.vpc_main_id
-    app-testing        = file(user_data.sh)
+    app-testing        = file("./user_data.sh")
 }
