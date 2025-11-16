@@ -3,11 +3,11 @@
 yum update -y
 
 # Install Apache
-yum install -y httpd
+yum install -y nginx
 
 # Enable and start Apache
-systemctl enable httpd
-systemctl start httpd
+systemctl enable nginx
+systemctl start nginx
 
 # Fetch instance metadata
 HOSTNAME=$(curl -s http://169.254.169.254/latest/meta-data/local-hostname)
