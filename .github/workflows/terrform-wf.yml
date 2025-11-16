@@ -18,6 +18,8 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    default:
+      working-directory: ./project1/
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -47,13 +49,13 @@ jobs:
       
       - name: Terraform init
         run: terraform init
-        working-directory: ./project1/
+        
       
       - name: Terraform plan
         run: terraform plan
-        working-directory: ./project1/
+        
 
       - name: Terraform apply
         run: terraform apply
-        working-directory: ./project1/
+        
     
