@@ -46,7 +46,7 @@ jobs:
           aws configure set default.region us-east-1
 
       - name: list files
-        run: ls -la ./project1
+        run: ls -la . 
       
       - name: Terraform init
         run: terraform init
