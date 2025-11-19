@@ -21,3 +21,9 @@ module "instance" {
     vpc_main_id        = module.vpc.vpc_main_id
     app-testing        = "./user_data.sh"
 }
+
+module "alb" {
+    source = "./modules/alb"
+    vpc_main_id = module.vpc.vpc_main_id
+    subnet_id   = module.vpc.subnet_ids
+}
