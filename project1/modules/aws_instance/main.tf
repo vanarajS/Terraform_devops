@@ -38,6 +38,10 @@ resource "aws_security_group" "allow_ssh" {
 }   
 
 
+output "instance_ids" {
+  value = aws_instance.web1[*].id
+
+}
     
 
 
