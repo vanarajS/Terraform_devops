@@ -26,4 +26,5 @@ module "alb" {
     source = "./modules/alb"
     vpc_main_id = module.vpc.vpc_main_id
     subnet_id   = module.vpc.subnet_ids
+    instance_ids = module.instance.instance_ids
 }
