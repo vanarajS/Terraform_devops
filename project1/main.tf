@@ -20,7 +20,7 @@ module "instance" {
     subnet_id          = module.vpc.subnet_ids
     vpc_main_id        = module.vpc.vpc_main_id
     app-testing        = "./user_data.sh"
-    security_group_ids = [ module.sg.22-sg, module.sg.80-sg ]
+    security_group_ids = [ module.sg.sg_22, module.sg.sg_80 ]
 }
 
 module "alb" {
@@ -28,7 +28,7 @@ module "alb" {
     vpc_main_id = module.vpc.vpc_main_id
     subnet_id   = module.vpc.subnet_ids
     instance_ids = module.instance.instance_ids
-    sg_id = module.sg.80-sg
+    sg_id = module.sg.sg_80
 }
 
 module "sg" {

@@ -39,9 +39,9 @@ resource "aws_security_group" "allow_ssh" {
 }   
 
 
-output "80-sg" {  
+output "sg_80" {  
   value = aws_security_group.lb-sg.id 
 }
-output "22-sg" {  
+output "sg_22" {  
   value = aws_security_group.allow_ssh.id 
 }
