@@ -30,7 +30,7 @@ resource "aws_lb" "lb" {
   name               = "test-lb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = sg_id
+  security_groups    = var.sg_id
   subnets            = [for subnet in var.subnet_id : subnet]
 
   enable_deletion_protection = true
