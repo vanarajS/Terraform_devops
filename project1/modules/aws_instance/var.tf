@@ -41,3 +41,8 @@ variable "security_group_ids" {
     type        = list(string)
   
 }
+
+variable "ec2_name" {
+  description = "EC2_name"
+  default = list(string)
+}

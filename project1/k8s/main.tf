@@ -19,21 +19,11 @@ module "instance" {
     instance_type      = "t2.micro"
     subnet_id          = module.vpc.subnet_ids
     vpc_main_id        = module.vpc.vpc_main_id
-    app-testing        = "./user_data.sh"
+    app-testing        = "./Ansible_user_data.sh"
     security_group_ids = [ module.sg.sg_22, module.sg.sg_80 ]
     ec2_name           = ["master01", "worker01"]
 }
 
-module "alb" {
-    source = "./modules/alb"
-    vpc_main_id = module.vpc.vpc_main_id
-    subnet_id   = module.vpc.subnet_ids
-    instance_ids = module.instance.instance_ids
-    sg_id = module.sg.sg_80
-}
-
-module "sg" {
-    source = "./modules/sg"
-    vpc_main_id = module.vpc.vpc_main_id 
-  
+output "instance" {
+  value = module.instance.instance_public_ip
 }

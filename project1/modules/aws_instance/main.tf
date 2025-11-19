@@ -14,7 +14,7 @@ resource "aws_instance" "web1" {
   vpc_security_group_ids = var.security_group_ids
 
   tags = {
-    Name = "web-${count.index}"
+    Name = var.ec2_name[count.index]
   }
 }
 
@@ -23,6 +23,13 @@ resource "aws_instance" "web1" {
 
 output "instance_ids" {
   value = aws_instance.web1[*].id
+
+}
+
+output "instance_public_ip" {
+  value = {
+    for k, v in aws_instance.web1 : k.Name => v.public_ip
+  }
 
 }
     
