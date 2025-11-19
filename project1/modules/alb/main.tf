@@ -17,11 +17,9 @@ resource "aws_lb_target_group" "tg" {
   }
 }
 resource "aws_lb_target_group_attachment" "test" {
-  for_each = {
-    for v in var.instance_ids 
-  }
+  count = length(var.instance_ids)
   target_group_arn = aws_lb_target_group.tg.arn
-  target_id        = each.value
+  target_id        = var.instance_ids[count.index]
   port             = 80
 }
 
