@@ -18,10 +18,10 @@ resource "aws_lb_target_group" "tg" {
 }
 resource "aws_lb_target_group_attachment" "test" {
   for_each = {
-    for k, v in var.instance_ids : k => v
+    for v in var.instance_ids 
   }
   target_group_arn = aws_lb_target_group.tg.arn
-  target_id        = each.value.id
+  target_id        = each.value
   port             = 80
 }
 
