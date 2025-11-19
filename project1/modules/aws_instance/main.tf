@@ -11,31 +11,14 @@ resource "aws_instance" "web1" {
   ami = var.os_name
   user_data = file(var.app-testing)
   associate_public_ip_address = true 
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.lb-sg.id]
+  vpc_security_group_ids = var.security_group_ids
 
   tags = {
     Name = "web-${count.index}"
   }
 }
 
-resource "aws_security_group" "allow_ssh" {
-  name        = "allow_ssh"
-  description = "Allow SSH inbound traffic"
-  vpc_id      = var.vpc_main_id
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }  
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}   
 
 
 output "instance_ids" {

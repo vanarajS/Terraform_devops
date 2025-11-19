@@ -25,31 +25,12 @@ resource "aws_lb_target_group_attachment" "test" {
   port             = 80
 }
 
-resource "aws_security_group" "lb-sg" {
-  name        = "allow_lb"
-  description = "Allow lb inbound traffic"
-  vpc_id      = var.vpc_main_id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "TCP"
-    cidr_blocks = ["0.0.0.0/0"]
-  }  
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
-}
 
 resource "aws_lb" "lb" {
   name               = "test-lb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.lb-sg.id]
+  security_groups    = sg_id
   subnets            = [for subnet in var.subnet_id : subnet]
 
   enable_deletion_protection = true
@@ -69,3 +50,4 @@ resource "aws_lb_listener" "front_end" {
     target_group_arn = aws_lb_target_group.tg.arn
   }
 }
+

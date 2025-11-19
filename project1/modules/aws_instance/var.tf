@@ -36,3 +36,8 @@ variable "app-testing" {
   
 }
 
+variable "security_group_ids" {
+    description = "List of Instance IDs"
+    type        = list(string)
+  
+}

@@ -13,3 +13,9 @@ variable "instance_ids" {
     type        = list(string)
   
 }
+
+variable "sg_id" {
+    description = "Security Group ID for ALB"
+    type        = string
+  
+}
