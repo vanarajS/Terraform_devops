@@ -156,9 +156,9 @@
   ansible.builtin.shell: source /etc/environment
   become: true 
 
-- name: Pull images required by kubeadm
-  ansible.builtin.command: sudo kubeadm config images pull
-  become: true
+# - name: Pull images required by kubeadm
+#   ansible.builtin.command: sudo kubeadm config images pull
+#   become: true
 
 - name: Initialize Kubernetes cluster with kubeadm
   ansible.builtin.command: sudo kubeadm init --pod-network-cidr=192.168.10.0/16 --control-plane-endpoint ${HOSTNAME}
