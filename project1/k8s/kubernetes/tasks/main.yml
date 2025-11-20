@@ -53,11 +53,10 @@
   ansible.builtin.yum_repository:
     name: kubernetes
     description: Kubernetes Repository
-    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    baseurl: "https://pkgs.k8s.io/core:/stable:/v1.{{ k8s_version }}/rpm/"
     gpgcheck: 1
-    gpgkey: 
-      - https://packages.cloud.google.com/yum/doc/yum-key.gpg
-      - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.{{ k8s_version }}/rpm/repodata/repomd.xml.key
+    
     repo_gpgcheck: 1
     enabled: 1
     state: present    
