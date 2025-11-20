@@ -118,6 +118,12 @@
   ansible.builtin.command: containerd config default > /etc/containerd/config.toml
   become: true  
 
+- name: Comment out cri plugin
+  ansible.builtin.replace:
+    path: /etc/containerd/config.toml
+    regexp: '^(\s*disabled_plugins = \["cri"\])'
+    replace: '#'
+
 - name: Restart containerd to apply new configuration
   ansible.builtin.service: 
     name: containerd
