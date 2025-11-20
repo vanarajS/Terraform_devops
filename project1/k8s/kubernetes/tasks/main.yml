@@ -184,7 +184,18 @@
 - name: Initialize Kubernetes cluster with kubeadm
   ansible.builtin.command: sudo kubeadm init --kubernetes-version v1.29.4 --pod-network-cidr=192.168.10.0/16 --control-plane-endpoint ${HOSTNAME}
 
--
+- name: Make dir 
+  ansible.builtin.file:
+    path: "$HOME/.kube"
+    state: directory
+    mode: '0755'
+    owner: "${USER}"
+    group: "${USER}"
+  become: true
+
+- name: Copy kubeconfig file
+  ansible.builtin.command: sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  become: true  
 
 
 
