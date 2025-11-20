@@ -14,6 +14,7 @@
     name:
       - apt-transport-https
       - ca-certificates
+      - python3-dnf-plugin-versionlock
       #- curl
 
 - name: load modules
@@ -81,6 +82,18 @@
 - name: Hold Kubernetes packages at current version
   ansible.builtin.command: "dnf versionlock add kubelet kubeadm kubectl"
   become: true    
+
+- name: Add Docker CE repository
+  ansible.builtin.yum_repository:
+    name: docker-ce
+    description: Docker CE Repository
+    baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+    gpgcheck: 1
+    gpgkey: https://download.docker.com/linux/centos/gpg
+    repo_gpgcheck: 1
+    enabled: 1
+    state: present    
+  become: true
 
 - name: Install containerd
   ansible.builtin.package:
