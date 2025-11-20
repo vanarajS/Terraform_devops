@@ -65,9 +65,9 @@
 - name: Install Kubernetes packages
   ansible.builtin.package:
     name: 
-      - kubelet-{{ k8s_version }}-0
-      - kubeadm-{{ k8s_version }}-0
-      - kubectl-{{ k8s_version }}-0
+      - kubelet-{{ k8s_version }}
+      - kubeadm-{{ k8s_version }}
+      - kubectl-{{ k8s_version }}
     state: present
     update_cache: yes    
   become: true 
