@@ -129,6 +129,9 @@
     enabled: true
     state: started
   become: true  
+- name: generate containerd 
+  command: sudo containerd config default | sudo tee /etc/containerd/config.toml
+  become: true
 
 - name: Set cgroup driver to systemd for containerd
   ansible.builtin.replace:
