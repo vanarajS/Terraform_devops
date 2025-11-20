@@ -30,7 +30,7 @@
 
 
 - name: Load modules using sysctl
-  ansible.builtin.sysctl:
+  ansible.builtin.modprobe:
     name: "{{ item }}"
     state: present
     reload: yes
