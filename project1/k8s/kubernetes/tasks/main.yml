@@ -46,7 +46,7 @@
     k8s_version: "1.27"
 
 - name: Env version
-  ansible.builtin.shell: echo "VERSION={{ k8s_versio }}" >> /etc/environment
+  ansible.builtin.shell: echo "VERSION={{ k8s_version }}" >> /etc/environment
   become: true
    
 - name: Add Kubernetes apt repository
