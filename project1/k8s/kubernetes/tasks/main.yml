@@ -43,7 +43,7 @@
 
 - name: Export kubernetes version variable
   ansible.builtin.set_fact:
-    k8s_version: "1.27"
+    k8s_version: "1.29"
 
 - name: Env version
   ansible.builtin.shell: echo "VERSION={{ k8s_version }}" >> /etc/environment
