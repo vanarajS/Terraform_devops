@@ -79,7 +79,7 @@
   become: true
 
 - name: Hold Kubernetes packages at current version
-  ansible.builtin.command: "dnf versionlock add kubelet-{{ k8s_version }}-0 kubeadm-{{ k8s_version }}-0 kubectl-{{ k8s_version }}-0"
+  ansible.builtin.command: "dnf versionlock add kubelet kubeadm kubectl"
   become: true    
 
 - name: Install containerd
