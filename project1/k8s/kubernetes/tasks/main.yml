@@ -38,7 +38,8 @@
 
 - name: Apply sysctl params without reboot
   ansible.builtin.command: sudo sysctl --system  
-  become: true  
+  become: true 
+  ignore_errors: yes
 
 - name: Export kubernetes version variable
   ansible.builtin.set_fact:
