@@ -28,6 +28,17 @@
       br_netfilter
   become: true
 
+
+- name: Load modules using sysctl
+  ansible.builtin.sysctl:
+    name: "{{ item }}"
+    state: present
+    reload: yes
+  loop:
+    - overlay
+    - br_netfilter
+  become: true
+
 - name: Set sysctl params
   ansible.builtin.copy:
     dest: /etc/sysctl.d/k8s.conf
@@ -37,10 +48,6 @@
       net.bridge.bridge-nf-call-ip6tables = 1
   become: true  
 
-- name: Apply sysctl params without reboot
-  ansible.builtin.command: sudo sysctl --system  
-  become: true 
-  ignore_errors: yes
 
 - name: Export kubernetes version variable
   ansible.builtin.set_fact:
