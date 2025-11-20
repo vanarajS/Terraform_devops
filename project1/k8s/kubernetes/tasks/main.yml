@@ -3,11 +3,11 @@
   ansible.builtin.command: swapoff -a
   become: true
 
-- name: Ensure swap is disabled on boot
-  ansible.builtin.replace:
-    path: /etc/fstab
-    regexp: '^([^#]*\s+swap\s+.*)$'
-    replace: '# \1'
+# - name: Ensure swap is disabled on boot
+#   ansible.builtin.replace:
+#     path: /etc/fstab
+#     regexp: '^([^#]*\s+swap\s+.*)$'
+#     replace: '# \1'
 
 - name: Install required packages
   ansible.builtin.package:
