@@ -14,7 +14,7 @@
     name:
       - apt-transport-https
       - ca-certificates
-      - curl
+      #- curl
 
 - name: load modules
   ansible.builtin.command: sudo modprobe overlay && sudo modprobe br_netfilter 
