@@ -161,7 +161,7 @@
 #   become: true
 
 - name: Initialize Kubernetes cluster with kubeadm
-  ansible.builtin.command: sudo kubeadm init --pod-network-cidr=192.168.10.0/16 --control-plane-endpoint ${HOSTNAME}
+  ansible.builtin.command: sudo kubeadm init --kubernetes-version v1.29.4 --pod-network-cidr=192.168.10.0/16 --control-plane-endpoint ${HOSTNAME}
 
 -
 
