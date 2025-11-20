@@ -87,9 +87,9 @@
   ansible.builtin.yum_repository:
     name: docker-ce
     description: Docker CE Repository
-    baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+    baseurl: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_9_Stream/
     gpgcheck: 1
-    gpgkey: https://download.docker.com/linux/centos/gpg
+    gpgkey: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_9_Stream/repodata/repomd.xml.key
     repo_gpgcheck: 1
     enabled: 1
     state: present    
