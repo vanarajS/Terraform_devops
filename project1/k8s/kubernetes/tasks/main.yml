@@ -14,4 +14,173 @@
     name:
       - apt-transport-https
       - ca-certificates
-      - curl       
+      - curl
+
+- name: load modules
+  ansible.builtin.command: sudo modprobe overlay && sudo modprobe br_netfilter 
+
+- name: Script for load moduels at reboot
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/k8s.conf
+    content: |
+      overlay
+      br_netfilter
+  become: true
+
+- name: Set sysctl params
+  ansible.builtin.copy:
+    dest: /etc/sysctl.d/k8s.conf
+    content: |
+      net.bridge.bridge-nf-call-iptables  = 1
+      net.ipv4.ip_forward                 = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+  become: true  
+
+- name: Apply sysctl params without reboot
+  ansible.builtin.command: sysctl --system  
+  become: true  
+
+- name: Export kubernetes version variable
+  ansible.builtin.set_fact:
+    k8s_version: "1.27"
+
+- name: Env version
+  ansible.builtin.shell: echo "VERSION={{ k8s_versio }}" >> /etc/environment
+  become: true
+   
+- name: Add Kubernetes apt repository
+  ansible.builtin.yum_repository:
+    name: kubernetes
+    description: Kubernetes Repository
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    gpgcheck: 1
+    gpgkey: 
+      - https://packages.cloud.google.com/yum/doc/yum-key.gpg
+      - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    repo_gpgcheck: 1
+    enabled: 1
+    state: present    
+  become: true
+
+- name: Install Kubernetes packages
+  ansible.builtin.package:
+    name: 
+      - kubelet-{{ k8s_version }}-0
+      - kubeadm-{{ k8s_version }}-0
+      - kubectl-{{ k8s_version }}-0
+    state: present
+    update_cache: yes    
+  become: true 
+- name: Enable and start kubelet service
+  ansible.builtin.service: 
+    name: kubelet
+    enabled: true
+    state: started
+  become: true
+
+- name: Hold Kubernetes packages at current version
+  ansible.builtin.command: "dnf versionlock add kubelet-{{ k8s_version }}-0 kubeadm-{{ k8s_version }}-0 kubectl-{{ k8s_version }}-0"
+  become: true    
+
+- name: Install containerd
+  ansible.builtin.package:
+    name: containerd.io 
+    state: present
+  become: true 
+
+- name: Create containerd configuration directory
+  ansible.builtin.file: 
+    path: /etc/containerd
+    state: directory
+    mode: '0755'
+  become: true  
+
+- name: Generate default containerd configuration file
+  ansible.builtin.command: containerd config default > /etc/containerd/config.toml
+  become: true  
+
+- name: Restart containerd to apply new configuration
+  ansible.builtin.service: 
+    name: containerd
+    state: restarted  
+
+- name: Enable containerd service
+  ansible.builtin.service:
+    name: containerd
+    enabled: true
+    state: started
+  become: true  
+
+- name: Set cgroup driver to systemd for containerd
+  ansible.builtin.replace:
+    path: /etc/containerd/config.toml
+    regexp: 'SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
+  become: true
+
+- name: Restart containerd to apply cgroup driver change
+  ansible.builtin.service: 
+    name: containerd
+    state: restarted  
+  become: true
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+  become: true
+
+- name: Verify containerd is running
+  ansible.builtin.command: systemctl status containerd  
+  register: containerd_status   
+
+- name: Display containerd status
+  ansible.builtin.debug:
+    var: containerd_status.stdout_lines 
+
+- name: Verify kubelet is running
+  ansible.builtin.command: systemctl status kubelet  
+  register: kubelet_status
+
+- name: Display kubelet status
+  ansible.builtin.debug:  
+    var: kubelet_status.stdout_lines 
+
+- name: Load environment variables
+  ansible.builtin.shell: source /etc/environment
+  become: true 
+
+- name: Verify kubectl version
+  ansible.builtin.command: kubectl version --client --short
+  register: kubectl_version
+
+- name: Display kubectl version
+  ansible.builtin.debug:  
+    var: kubectl_version.stdout_lines 
+
+- name: Verify kubeadm version
+  ansible.builtin.command: kubeadm version -o short
+  register: kubeadm_version
+
+- name: Display kubeadm version
+  ansible.builtin.debug:  
+    var: kubeadm_version.stdout_lines
+
+- name: Verify kubelet version
+  ansible.builtin.command: kubelet --version
+  register: kubelet_version
+
+- name: Display kubelet version   
+  ansible.builtin.debug:  
+    var: kubelet_version.stdout_lines
+
+- name: Verify containerd version
+  ansible.builtin.command: containerd --version
+  register: containerd_version
+
+- name: Display containerd version   
+  ansible.builtin.debug:  
+    var: containerd_version.stdout_lines  
+
+    
