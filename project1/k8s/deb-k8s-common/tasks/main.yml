@@ -75,8 +75,11 @@
 - name: Configure containerd
   ansible.builtin.command: |
     mkdir -p /etc/containerd  
-    containerd config default | tee /etc/containerd/config.toml
   become: true 
+
+- name: Generate default containerd configuration file
+  ansible.builtin.command: containerd config default > /etc/containerd/config.toml
+  become: true  
 
 - name: Restart containerd  
   ansible.builtin.service:
