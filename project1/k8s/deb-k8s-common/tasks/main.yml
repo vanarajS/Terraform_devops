@@ -132,13 +132,13 @@
     state: started
   become: true
 
-- name: Hold Kubernetes packages at current version
-  ansible.builtin.apt:
-    name:
-      - kubelet
-      - kubeadm
-      - kubectl
-    state: present
-    mark: hold
-  become: true 
+- name: Hold Kubernetes packages
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
+  become: true
 
