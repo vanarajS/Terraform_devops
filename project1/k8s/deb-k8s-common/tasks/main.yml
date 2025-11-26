@@ -94,11 +94,12 @@
     state: present
   become: true
 
-- name: Add kubernetes apt repository
-  ansible.builtin.apt_repository:
-    repo: https://pkgs.k8s.io/core:/stable:/v1.30/deb/
-    state: present
-    filename: kubernetes
+- name: Add Kubernetes apt repository
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    mode: '0644'
+    content: |
+      deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /
   become: true
 
 - name: Update apt package index
