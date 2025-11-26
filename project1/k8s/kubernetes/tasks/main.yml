@@ -186,11 +186,11 @@
 
 - name: Make dir 
   ansible.builtin.file:
-    path: "$HOME/.kube"
+    path: "{{ ansible_env.HOME }}/.kube"
     state: directory
     mode: '0755'
-    owner: "${USER}"
-    group: "${USER}"
+    owner: "{{ ansible_user_id  }}"
+    group: "{{ ansible_user_id }}"
   become: true
 
 - name: Copy kubeconfig file
