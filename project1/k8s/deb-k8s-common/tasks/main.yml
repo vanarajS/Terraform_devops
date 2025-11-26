@@ -1,0 +1,126 @@
+---
+- name: disable swap
+  ansible.builtin.command: swapoff -a
+  become: true
+
+# - name: Ensure swap is disabled on boot
+#   ansible.builtin.replace:
+#     path: /etc/fstab
+#     regexp: '^([^#]*\s+swap\s+.*)$'
+#     replace: '# \1'
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - python3-apt
+      #- curl
+
+- name: load modules
+  ansible.builtin.command: sudo modprobe overlay && sudo modprobe br_netfilter 
+
+- name: Script for load moduels at reboot
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/k8s.conf
+    content: |
+      overlay
+      br_netfilter
+  become: true
+
+- name: Load modules using sysctl
+  ansible.builtin.modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - overlay
+    - br_netfilter
+  become: true
+
+- name: Set sysctl params
+  ansible.builtin.copy:
+    dest: /etc/sysctl.d/k8s.conf
+    content: |
+      net.bridge.bridge-nf-call-iptables  = 1
+      net.ipv4.ip_forward                 = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+  become: true 
+
+- name: Sysctl apply settings immediately 
+  ansible.builtin.sysctl:
+     name: "{{ item.name }}"
+     value: "{{ item.value }}"
+     state: present
+     reload: yes
+  loop:
+    - { name: 'net.bridge.bridge-nf-call-iptables', value: '1' }
+    - { name: 'net.ipv4.ip_forward', value: '1' }
+    - { name: 'net.bridge.bridge-nf-call-ip6tables', value: '1' }
+  become: true
+
+- name: Export kubernetes version variable
+  ansible.builtin.set_fact:
+    k8s_version: "1.29"
+
+- name: Env version
+  ansible.builtin.shell: echo "VERSION={{ k8s_version }}" >> /etc/environment
+  become: true
+
+- name: containerd installation
+  ansible.builtin.package:
+    name:
+      - containerd
+  become: true  
+
+- name: Configure containerd
+  ansible.builtin.command: |
+    mkdir -p /etc/containerd  
+    containerd config default | tee /etc/containerd/config.toml
+  become: true 
+
+- name: Restart containerd  
+  ansible.builtin.service:
+    name: containerd
+    state: restarted
+    enabled: true
+  become: true  
+
+- name: Add Kubernetes apt repository GPG key
+  ansible.builtin.apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  become: true  
+
+- name: Add Kubernetes apt repository
+  ansible.builtin.apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+  become: true
+
+- name: Install Kubernetes packages
+  ansible.builtin.package:
+    name: 
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+    update_cache: yes    
+  become: true
+
+- name: Enable and start kubelet service
+  ansible.builtin.service: 
+    name: kubelet
+    enabled: true
+    state: started
+  become: true
+
+- name: Hold Kubernetes packages at current version
+  ansible.builtin.apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+    mark: hold
+  become: true 
+
