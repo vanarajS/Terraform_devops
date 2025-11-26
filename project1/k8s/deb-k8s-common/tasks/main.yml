@@ -88,10 +88,18 @@
     enabled: true
   become: true  
 
-- name: Create kubernetes apt source file
-  ansible.builtin.apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
+- name: Download Kubernetes apt repository key
+  ansible.builtin.get_url:
+    url: https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key
+    dest: /etc/apt/keyrings/kubernetes-apt-keyring
+    mode: '0644'
+  become: true
+
+- name: Convert Release.key to gpg keyring
+  ansible.builtin.command:
+    cmd: gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /etc/apt/keyrings/kubernetes-apt-keyring
+  args:
+    creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
   become: true
 
 - name: Add Kubernetes apt repository
