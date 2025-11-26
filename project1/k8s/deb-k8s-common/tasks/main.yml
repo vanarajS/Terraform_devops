@@ -88,16 +88,22 @@
     enabled: true
   become: true  
 
-- name: Add Kubernetes apt repository GPG key
+- name: Create kubernetes apt source file
   ansible.builtin.apt_key:
-    url: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key"
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
     state: present
-  become: true  
+  become: true
 
-- name: Add Kubernetes apt repository
+- name: Add kubernetes apt repository
   ansible.builtin.apt_repository:
-    repo: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }} /deb"
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
     state: present
+    filename: kubernetes
+  become: true
+
+- name: Update apt package index
+  ansible.builtin.apt:
+    update_cache: yes
   become: true
 
 - name: Install Kubernetes packages
