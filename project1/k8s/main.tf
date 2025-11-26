@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "vpc" {
-  source          = "./modules/vpc"
+  source          = "../modules/vpc"
   cidr_block =  "12.0.0.0/16"
   vpc_name = "vpc-main"
   sub_region = ["us-east-1a", "us-east-1b"]
@@ -11,8 +11,14 @@ module "vpc" {
   subnet_cidr = ["12.0.1.0/24", "12.0.2.0/24"]
 }
 
+
+module "sg" {
+  source = "../modules/sg"
+  vpc_main_id = module.vpc.vpc_main_id
+}
+
 module "instance" {
-    source = "./modules/aws_instance"
+    source = "../modules/aws_instance"
     public_key_path    = "./ssh-key"
     os_name            = "ami-069e612f612be3a2b"
     aws_instance_count = 2
