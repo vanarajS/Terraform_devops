@@ -28,7 +28,7 @@ output "instance_ids" {
 
 output "instance_public_ip" {
   value = {
-    for k, v in aws_instance.web1 : k.tags.Name => v.public_ip
+    for k, v in aws_instance.web1 : v.tags.Name => v.public_ip
   }
 
 }
