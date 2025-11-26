@@ -19,7 +19,7 @@ module "sg" {
 
 module "instance" {
     source = "../modules/aws_instance"
-    public_key_path    = "./ssh-key"
+    public_key_path    = "../ssh-key"
     os_name            = "ami-069e612f612be3a2b"
     aws_instance_count = 2
     instance_type      = "t2.micro"
