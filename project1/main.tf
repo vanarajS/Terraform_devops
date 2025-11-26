@@ -11,6 +11,12 @@ module "vpc" {
   subnet_cidr = ["12.0.1.0/24", "12.0.2.0/24"]
 }
 
+module "sg" {
+    source = "./modules/sg"
+    vpc_main_id = module.vpc.vpc_main_id 
+  
+}
+
 module "instance" {
     source = "./modules/aws_instance"
     public_key_path    = "./ssh-key"
@@ -32,8 +38,3 @@ module "alb" {
     sg_id = module.sg.sg_80
 }
 
-module "sg" {
-    source = "./modules/sg"
-    vpc_main_id = module.vpc.vpc_main_id 
-  
-}
