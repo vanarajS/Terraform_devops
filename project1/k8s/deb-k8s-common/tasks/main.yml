@@ -90,13 +90,13 @@
 
 - name: Add Kubernetes apt repository GPG key
   ansible.builtin.apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    url: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key"
     state: present
   become: true  
 
 - name: Add Kubernetes apt repository
   ansible.builtin.apt_repository:
-    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    repo: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }} /deb"
     state: present
   become: true
 
