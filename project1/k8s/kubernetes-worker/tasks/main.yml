@@ -15,7 +15,7 @@
   become: true
 
 - name: Join the node to the cluster (idempotent)
-  ansible.builtin.shell: bash /join-command.sh
+  shell: bash /join-command.sh
   args:
     creates: /etc/kubernetes/kubelet.conf
   become: true
