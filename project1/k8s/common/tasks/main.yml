@@ -2,7 +2,6 @@
 # tasks file for common
 - name: disable swap
   ansible.builtin.shell: swapoff -a
-  become: true
 
 # - name: Ensure swap is disabled on boot
 #   ansible.builtin.replace:
