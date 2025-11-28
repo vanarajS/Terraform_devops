@@ -65,9 +65,9 @@
     - { name: 'net.bridge.bridge-nf-call-ip6tables', value: '1' }
   become: true
 
-  - name: Export kubernetes version variable
+- name: Export kubernetes version variable
   ansible.builtin.set_fact:
-    k8s_version: "1.29"
+  k8s_version: "1.29"
 
 - name: Env version
   command: echo "VERSION={{ k8s_version }}" >> /etc/environment
