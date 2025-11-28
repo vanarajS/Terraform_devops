@@ -4,7 +4,7 @@
     k8s_version: "1.29"
 
 - name: Env version
-  ansible.builtin.shell: echo "VERSION={{ k8s_version }}" >> /etc/environment
+  command: echo "VERSION={{ k8s_version }}" >> /etc/environment
   become: true
 
 - name: containerd installation
