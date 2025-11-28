@@ -1,6 +1,7 @@
 # tasks file for common
 - name: disable swap
-  ansible.builtin.shell: swapoff -a
+  ansible.builtin.shell: 
+    cmd: swapoff -a
   become: true
 
 - name: Install required packages
@@ -12,7 +13,7 @@
       #- curl
     state: present
   become: true
-  
+
 - name: load modules
   ansible.builtin.command: sudo modprobe overlay && sudo modprobe br_netfilter 
 
