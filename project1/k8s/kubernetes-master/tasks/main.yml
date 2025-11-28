@@ -118,6 +118,7 @@
     src: /etc/kubernetes/admin.conf
     dest: /root/.kube/config
     mode: '0644'
+    remote_src: yes
   become: true  
 
 # - name: Taint master node to allow scheduling pods
