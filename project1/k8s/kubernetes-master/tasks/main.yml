@@ -1,2 +1,57 @@
 ---
 # tasks file for kubernetes-master
+---
+# tasks file for k8s-init
+- name: Check if Kubernetes has already been initialized
+  ansible.builtin.stat:
+    path: /etc/k8s_initialized
+  register: k8s_init_flag
+
+- name: Initialize Kubernetes
+  command: kubeadm init --pod-network-cidr=10.244.0.0/16
+  when: not k8s_init_flag.stat.exists
+
+- name: Mark Kubernetes initialization as completed
+  ansible.builtin.file:
+    name: /etc/k8s_initialized
+    state: touch
+  when: not k8s_init_flag.stat.exists
+
+- name: Create .kube directory
+  ansible.builtin.file:
+    name: /root/.kube
+    state: directory
+    mode: '0755' 
+  become: true
+
+- name: Copy admin.conf to .kube/config
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+    mode: '0644'
+  become: true  
+
+
+
+- name: Taint master node to allow scheduling pods
+  ansible.builtin.command: kubectl taint nodes --all node-role.kubernetes.io/master-    
+  become: true
+
+- name: Get join command for worker nodes
+  ansible.builtin.command: kubeadm token create --print-join-command
+  register: join_command
+  become: true
+- name: Save join command to file
+  ansible.builtin.copy:
+    content: "{{ join_command.stdout }}"
+    dest: /join-command.sh
+    mode: '0755'
+  become: true  
+
+- name: Display join command
+  ansible.builtin.debug:
+    msg: "Use the following command to join worker nodes to the cluster: {{ join_command.stdout }}" 
+  become: false
+
+
+
