@@ -31,7 +31,7 @@
 
 - name: Taint master node to allow scheduling pods
   ansible.builtin.shell: |
-    kubectl taint nodes --all node-role.kubernetes.io/master- 
+    'kubectl taint nodes --all node-role.kubernetes.io/master-' 
   become: true
 
 - name: Get join command for worker nodes
