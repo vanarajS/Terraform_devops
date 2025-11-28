@@ -10,7 +10,9 @@
       - ca-certificates
       - python3-apt
       #- curl
-
+    state: present
+  become: true
+  
 - name: load modules
   ansible.builtin.command: sudo modprobe overlay && sudo modprobe br_netfilter 
 
