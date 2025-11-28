@@ -1,4 +1,3 @@
----
 # tasks file for common
 - name: disable swap
   ansible.builtin.shell: swapoff -a
