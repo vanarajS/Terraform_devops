@@ -34,7 +34,7 @@
   become: true  
 
 - name: Taint master node to allow scheduling pods
-  ansible.builtin.shell: |
+  ansible.builtin.command: |
     kubectl taint nodes --all node-role.kubernetes.io/master-    
   become: true
 
