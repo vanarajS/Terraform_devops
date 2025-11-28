@@ -1,13 +1,21 @@
----
-# tasks file for kubernetes-worker
-- name: Copy join command script from master to worker
-  ansible.builtin.fetch:
+- name: Ensure join script exists on master and fetch it
+  ansible.builtin.slurp:
     src: /join-command.sh
-    dest: /join-command.sh
-    flat: yes
-    delegate_to: "{{ groups['masters'][0] }}"
-  become: true  
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+  register: join_script
+  failed_when: join_script is failed or join_script.content is not defined
+  ignore_errors: no
 
-- name: Run join command to join the node to the cluster
-  command: sudo bash /join-command.sh
-  become: true  
+- name: Write join script to worker
+  ansible.builtin.copy:
+    dest: /join-command.sh
+    content: "{{ join_script.content | b64decode }}"
+    mode: '0755'
+  become: true
+
+- name: Join the node to the cluster (idempotent)
+  ansible.builtin.shell: bash /join-command.sh
+  args:
+    creates: /etc/kubernetes/kubelet.conf
+  become: true
