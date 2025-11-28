@@ -37,7 +37,7 @@
   become: true
 
 - name: Convert Release.key to gpg keyring
-  ansible.builtin.shell: |
+  command: |
      gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /etc/apt/keyrings/kubernetes-apt-keyring
   args:
     creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
