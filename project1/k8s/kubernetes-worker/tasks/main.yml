@@ -5,7 +5,7 @@
     src: /join-command.sh
     dest: /join-command.sh
     flat: yes
-  delegate_to: "{{ groups['masters'][0] }}"
+    delegate_to: "{{ groups['masters'][0] }}"
   become: true  
 
 - name: Run join command to join the node to the cluster
