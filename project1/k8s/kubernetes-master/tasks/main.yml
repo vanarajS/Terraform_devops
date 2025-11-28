@@ -6,7 +6,7 @@
   register: k8s_init_flag
 
 - name: Initialize Kubernetes
-  command: kubeadm init --pod-network-cidr=10.244.0.0/16
+  command: kubeadm init --apiserver-advertise-address={{ master_dns }} --pod-network-cidr=10.244.0.0/16
   when: not k8s_init_flag.stat.exists
 
 - name: Mark Kubernetes initialization as completed
