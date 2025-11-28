@@ -66,7 +66,7 @@
   become: true
 
 - name: Export kubernetes version variable
-  ansible.builtin.set_fact:
+  set_fact:
   k8s_version: "1.29"
 
 - name: Env version
