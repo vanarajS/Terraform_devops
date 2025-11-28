@@ -1,2 +1,13 @@
 ---
 # tasks file for kubernetes-worker
+- name: Copy join command script from master to worker
+  ansible.builtin.fetch:
+    src: /join-command.sh
+    dest: /join-command.sh
+    flat: yes
+  delegate_to: "{{ groups['masters'][0] }}"
+  become: true  
+
+- name: Run join command to join the node to the cluster
+  command: sudo bash /join-command.sh
+  become: true  
