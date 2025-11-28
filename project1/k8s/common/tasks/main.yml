@@ -1,7 +1,6 @@
 # tasks file for common
 - name: disable swap temporarily
-  ansible.builtin.command:
-    cmd: swapoff -a
+  ansible.builtin.command: swapoff -a
   become: true
 
 - name: disable swap permanently (comment out fstab swap entries)
