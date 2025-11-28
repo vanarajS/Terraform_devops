@@ -30,7 +30,7 @@
   become: true  
 
 - name: Install Calico network plugin
-  ansible.builtin.command: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml    
+  ansible.builtin.shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml    
   become: true  
 
 - name: Taint master node to allow scheduling pods
