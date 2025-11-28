@@ -1,6 +1,6 @@
 ---
 - name: disable swap
-  ansible.builtin.command: swapoff -a
+  command: swapoff -a
   become: true
 
 # - name: Ensure swap is disabled on boot
@@ -18,7 +18,7 @@
       #- curl
 
 - name: load modules
-  ansible.builtin.command: sudo modprobe overlay && sudo modprobe br_netfilter 
+  command: sudo modprobe overlay && sudo modprobe br_netfilter 
 
 - name: Script for load moduels at reboot
   ansible.builtin.copy:
@@ -98,7 +98,7 @@
   become: true
 
 - name: Hold Kubernetes packages at current version
-  ansible.builtin.command: "dnf versionlock add kubelet kubeadm kubectl"
+  command: "dnf versionlock add kubelet kubeadm kubectl"
   become: true    
 
 - name: Add Docker CE repository
@@ -127,7 +127,7 @@
   become: true  
 
 - name: Generate default containerd configuration file
-  ansible.builtin.command: containerd config default > /etc/containerd/config.toml
+  command: containerd config default > /etc/containerd/config.toml
   become: true  
 
 - name: Comment out cri plugin
@@ -166,7 +166,7 @@
 
 
 - name: Verify containerd is running
-  ansible.builtin.command: systemctl status containerd  
+  command: systemctl status containerd  
   register: containerd_status   
 
 - name: Display containerd status
@@ -178,11 +178,11 @@
   become: true 
 
 - name: Pull images required by kubeadm
-  ansible.builtin.command: sudo kubeadm config images pull
+  command: sudo kubeadm config images pull
   become: true
 
 - name: Initialize Kubernetes cluster with kubeadm
-  ansible.builtin.command: sudo kubeadm init --kubernetes-version v1.29.4 --pod-network-cidr=192.168.10.0/16 --control-plane-endpoint ${HOSTNAME}
+  command: sudo kubeadm init --kubernetes-version v1.29.4 --pod-network-cidr=192.168.10.0/16 --control-plane-endpoint ${HOSTNAME}
 
 - name: Make dir 
   ansible.builtin.file:
@@ -194,7 +194,7 @@
   become: true
 
 - name: Copy kubeconfig file
-  ansible.builtin.command: sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  command: sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   become: true  
 
 

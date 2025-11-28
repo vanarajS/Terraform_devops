@@ -34,12 +34,12 @@
   become: true  
 
 - name: Taint master node to allow scheduling pods
-  ansible.builtin.command: |
+  command: |
     kubectl taint nodes --all node-role.kubernetes.io/master-    
   become: true
 
 - name: Get join command for worker nodes
-  ansible.builtin.command: kubeadm token create --print-join-command
+  command: kubeadm token create --print-join-command
   register: join_command
   become: true
 - name: Save join command to file
@@ -55,6 +55,6 @@
   become: false
 
 - name: Display Kubernetes cluster status
-  ansible.builtin.command: kubectl get nodes
+  command: kubectl get nodes
   become: true
 

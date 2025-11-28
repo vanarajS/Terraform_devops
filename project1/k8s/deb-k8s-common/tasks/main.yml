@@ -1,6 +1,6 @@
 ---
 - name: disable swap
-  ansible.builtin.command: swapoff -a
+  command: swapoff -a
   become: true
 
 # - name: Ensure swap is disabled on boot
@@ -18,7 +18,7 @@
       #- curl
 
 - name: load modules
-  ansible.builtin.command: sudo modprobe overlay && sudo modprobe br_netfilter 
+  command: sudo modprobe overlay && sudo modprobe br_netfilter 
 
 - name: Script for load moduels at reboot
   ansible.builtin.copy:
@@ -73,12 +73,12 @@
   become: true  
 
 - name: Configure containerd
-  ansible.builtin.command: |
+  command: |
     mkdir -p /etc/containerd  
   become: true 
 
 - name: Generate default containerd configuration file
-  ansible.builtin.command: containerd config default > /etc/containerd/config.toml
+  command: containerd config default > /etc/containerd/config.toml
   become: true  
 
 - name: Restart containerd  

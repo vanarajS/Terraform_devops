@@ -35,7 +35,7 @@
 #   become: true
 
 - name: Get join command for worker nodes
-  ansible.builtin.command: 
+  command: 
     cmd: kubeadm token create --print-join-command
   register: join_command
   become: true
