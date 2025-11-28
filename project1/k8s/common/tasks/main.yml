@@ -1,6 +1,6 @@
 # tasks file for common
 - name: disable swap temporarily
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: swapoff -a
   become: true
 

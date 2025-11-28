@@ -1,6 +1,6 @@
 ---
 # tasks file for cni
 - name: Install Calico network plugin
-  ansible.builtin.shell: 
+  ansible.builtin.command: 
     cmd: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml    
   become: true  
